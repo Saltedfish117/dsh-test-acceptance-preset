@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+  <rect width="900" height="520" fill="#F3F6FB"/>
+
+  <!-- 顶部栏 -->
+  <rect x="0" y="0" width="900" height="76" fill="#FFFFFF"/>
+  <text x="36" y="48" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="22" font-weight="700" fill="#111827">订单列表</text>
+  <rect x="700" y="24" width="164" height="32" rx="16" fill="#EEF3FF" stroke="#C7D7FE"/>
+  <text x="782" y="45" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#2C55C0">全部订单</text>
+
+  <!-- 表头 -->
+  <rect x="24" y="100" width="852" height="40" rx="8" fill="#E8EEF8"/>
+  <text x="48" y="125" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="700" fill="#374151">订单号</text>
+  <text x="360" y="125" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="700" fill="#374151">状态</text>
+  <text x="640" y="125" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="700" fill="#374151">金额</text>
+  <text x="760" y="125" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="700" fill="#374151">下单时间</text>
+
+  <!-- 行 1：正常 -->
+  <rect x="24" y="148" width="852" height="64" rx="8" fill="#FFFFFF" stroke="#E5EAF2"/>
+  <text x="48" y="186" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" fill="#111827">NO20261026001</text>
+  <rect x="360" y="166" width="72" height="26" rx="13" fill="#E9F7EF"/>
+  <text x="396" y="184" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="13" fill="#1F7A45">已完成</text>
+  <text x="640" y="186" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" fill="#111827">￥ 128.00</text>
+  <text x="760" y="186" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#6B7280">10-26 18:12</text>
+
+  <!-- 行 2：已退款，金额列右移 -->
+  <rect x="24" y="220" width="852" height="64" rx="8" fill="#FFFFFF" stroke="#F1D9D6"/>
+  <text x="48" y="258" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" fill="#111827">NO20261026002</text>
+  <rect x="360" y="238" width="72" height="26" rx="13" fill="#FDECEA"/>
+  <text x="396" y="256" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="13" fill="#B42318">已退款</text>
+  <text x="664" y="258" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" fill="#B42318">￥ 86.50</text>
+  <text x="760" y="258" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#6B7280">10-25 09:40</text>
+
+  <!-- 行 3：正常 -->
+  <rect x="24" y="292" width="852" height="64" rx="8" fill="#FFFFFF" stroke="#E5EAF2"/>
+  <text x="48" y="330" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" fill="#111827">NO20261026003</text>
+  <rect x="360" y="310" width="72" height="26" rx="13" fill="#E9F7EF"/>
+  <text x="396" y="328" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="13" fill="#1F7A45">已完成</text>
+  <text x="640" y="330" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" fill="#111827">￥ 45.00</text>
+  <text x="760" y="330" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#6B7280">10-24 21:05</text>
+
+  <!-- 标注：金额列错位 -->
+  <rect x="632" y="232" width="130" height="40" rx="6" fill="none" stroke="#E5484D" stroke-width="2" stroke-dasharray="8 5"/>
+  <path d="M 632 292 L 600 292 L 600 316 L 620 316" fill="none" stroke="#E5484D" stroke-width="2"/>
+  <text x="470" y="396" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" font-weight="700" fill="#E5484D">「已退款」行金额右移约 24px，与表头「金额」列不对齐</text>
+
+  <!-- 底部说明 -->
+  <rect x="24" y="424" width="852" height="40" rx="8" fill="#FFFFFF" stroke="#E5EAF2"/>
+  <text x="48" y="449" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#6B7280">对比普通行与「已退款」行的金额左边界；缩放窗口到 1200 宽仍可复现</text>
+
+  <text x="450" y="500" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#9CA3AF">示例图 · 仅演示截图命名与引用方式，非真实测试证据</text>
+</svg>

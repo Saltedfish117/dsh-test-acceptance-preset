@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Acceptance Testing",
+    "description": "Pick it in the session's agent-preset selector: it asks for the test cases, the requirement document and the output directory before testing, then writes one Markdown file per failed case with screenshots, status and self-check validation, plus a first-pass call on whether the front end or the back end owns the defect. Tools run through run_code, like the PTC preset.",
+    "detail": "docs/DETAIL.md"
+  }
+}

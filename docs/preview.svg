@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300" role="img" aria-label="左侧是三个参数问题，右侧是输出的一组带级别色条与状态标记的 Markdown 报告">
+  <!-- 提问卡 -->
+  <rect x="32" y="48" width="222" height="204" rx="16" fill="#8A97AA" fill-opacity="0.06" stroke="#8A97AA" stroke-width="2" />
+  <rect x="54" y="72" width="92" height="8" rx="4" fill="#8A97AA" fill-opacity="0.5" />
+  <g stroke="#8A97AA" stroke-width="2" fill="none">
+    <circle cx="60" cy="116" r="5" />
+    <path d="M78 116 h70" stroke-linecap="round" />
+    <rect x="174" y="106" width="58" height="20" rx="10" />
+    <circle cx="60" cy="154" r="5" />
+    <path d="M78 154 h58" stroke-linecap="round" />
+    <rect x="174" y="144" width="58" height="20" rx="10" />
+    <circle cx="60" cy="192" r="5" />
+    <path d="M78 192 h76" stroke-linecap="round" />
+    <rect x="174" y="182" width="58" height="20" rx="10" />
+    <path d="M54 224 h178" stroke-opacity="0.35" />
+    <path d="M54 236 h120" stroke-opacity="0.35" />
+  </g>
+
+  <!-- 箭头 -->
+  <g stroke="#8A97AA" stroke-width="2" fill="none">
+    <path d="M268 150 h32" stroke-linecap="round" />
+    <path d="M290 143 l10 7 -10 7" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+
+  <!-- 报告卡片 -->
+  <g fill="#8A97AA" fill-opacity="0.06" stroke="#8A97AA" stroke-width="2">
+    <rect x="330" y="52" width="252" height="66" rx="12" />
+    <rect x="342" y="130" width="252" height="66" rx="12" />
+    <rect x="354" y="208" width="252" height="66" rx="12" />
+  </g>
+  <rect x="340" y="64" width="6" height="42" rx="3" fill="#E4572E" />
+  <rect x="352" y="142" width="6" height="42" rx="3" fill="#8A97AA" fill-opacity="0.55" />
+  <rect x="364" y="220" width="6" height="42" rx="3" fill="#8A97AA" fill-opacity="0.55" />
+  <g stroke="#8A97AA" stroke-width="2" stroke-linecap="round" stroke-opacity="0.65">
+    <path d="M364 74 h150" />
+    <path d="M364 92 h104" />
+    <path d="M376 152 h150" />
+    <path d="M376 170 h88" />
+    <path d="M388 230 h150" />
+    <path d="M388 248 h116" />
+  </g>
+
+  <!-- 状态标记与截图提示 -->
+  <circle cx="562" cy="74" r="6" fill="#E4572E" />
+  <g stroke="#8A97AA" stroke-width="2" fill="none" stroke-linecap="round">
+    <rect x="500" y="152" width="70" height="44" rx="8" />
+    <path d="M510 188 l16 -16 12 12 8 -8 14 14" stroke-linejoin="round" />
+    <circle cx="518" cy="166" r="4" />
+  </g>
+</svg>

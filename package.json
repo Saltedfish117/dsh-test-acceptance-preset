@@ -1,0 +1,44 @@
+{
+  "name": "dsh-test-acceptance-preset",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness 预设模式：测试验收。选定该模式后，agent 先询问测试用例、需求文档与输出目录，再逐条执行测试，把未通过项输出为 Markdown 报告，并给出前端还是后端的初步定位。",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-bundle",
+    "agent-preset",
+    "test-acceptance"
+  ],
+  "exports": {
+    ".": "./lib/index.js",
+    "./sections": "./lib/sections.js",
+    "./client": "./client/client.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "lib",
+    "client",
+    "skills",
+    "locale/*.json",
+    "docs",
+    "icon.svg",
+    "README.md"
+  ],
+  "dsh": {
+    "engines": {
+      "dsh": "^0.2.3-alpha.2"
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
+  }
+}

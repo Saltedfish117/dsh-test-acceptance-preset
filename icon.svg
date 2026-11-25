@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" role="img" aria-label="测试验收">
+  <g fill="none" stroke="#4C5B70" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 6h11l5 5v19a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" />
+    <path d="M22 6v5h5" />
+    <path d="M13.5 16h9" />
+    <path d="M13.5 21h9" />
+    <path d="M13.5 26h5" />
+  </g>
+  <circle cx="25.6" cy="25.6" r="4.6" fill="#E4572E" />
+  <path d="M25.6 23.2v3.1" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" />
+  <circle cx="25.6" cy="28.4" r="0.95" fill="#FFFFFF" />
+</svg>

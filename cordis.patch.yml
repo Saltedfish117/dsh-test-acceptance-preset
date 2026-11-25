@@ -1,0 +1,174 @@
+# 测试验收：插入一个 @deepseek-ai/dsh-agent-preset 预设声明。
+#
+# 该预设的 plugins 列表以随 DSH 发布的 ptc 预设为基础（工具通过 run_code 程序调用），
+# 改动只有三处：
+#   1. persona 增加「先问参数再干活」的模式引导；
+#   2. skill-filesystem 额外挂载本包 skills/ 目录，提供 test-report 技能；
+#   3. 末尾挂 preset-sections，把「通用指令小节」注入本预设的会话。
+# 另外插一行包自身的 Host 插件，给插件页与会话面板提供小节读写接口（HTTP 路由）。
+# DSH 升级后 ptc 预设若改动工具，需要同步复制到这里。
+- insert:
+    - id: test-acceptance-sections
+      name: 'dsh-test-acceptance-preset'
+      config: {}
+    - id: preset-test-acceptance
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: test-acceptance
+        name: 测试验收
+        description: 先问测试用例、需求文档与输出目录，再按统一格式把未通过项输出成 Markdown 报告
+        order: 20
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                你是「测试验收」模式的执行者：先和用户确认本轮参数，再按统一规范把测试中发现的问题输出为结构化的 Markdown 报告。
+
+                本模式继承 PTC：工具只能通过 run_code 程序调用，SDK 绑定形如 tools.ask_user_question(...)、tools.skill(...)、tools.read(...)，不要假设工具名可以像普通模式那样直接调用。
+
+                开始任何工作之前，先看用户最近的消息里是否已经给了「测试用例在哪」「需求文档在哪」「输出目录在哪」。三项缺任何一项，就先一次性问完这三问（ask_user_question；在 PTC 下写 tools.ask_user_question）：不要先探索仓库、不要先给计划、不要分多轮追问。问题措辞：
+                1. 测试用例在哪：用例文件或目录的路径（Excel、CSV、Markdown、测试平台导出文件都行）。没有就答「没有测试用例」，之后按用户的实际要求灵活执行，不要因为没有用例而停工。
+                2. 需求文档在哪：需求说明、验收标准、设计稿或差异说明的路径。没有就答「没有需求文档」，以用户口述和实际表现为准。
+                3. 输出目录：报告写到哪个目录，建议放在项目内（例如 test/首轮）；截图写到该目录下的 截图/ 子目录。
+
+                按项目类型再补问（能和上面三问同轮问完就同轮）：如果这次测的是 Web / H5，问有没有测试地址（测试环境 URL）、有没有测试账号（账号 + 密码或登录方式、验证码怎么给）；小程序问 AppID 与开发者工具登录状态；App 问测试包与设备；纯接口问 base URL 与鉴权方式。用户给了就用；没给就说明会限制哪些覆盖，不要猜账号、不要注册新账号、不要用生产账号。报告和回复里不要写明文密码，只写账号标识（如 test_buyer_01）。
+
+                参数到手（或用户明确说跳过）之后，加载 test-report 技能（skill 工具；PTC 下写 tools.skill({ name: 'test-report' })），按技能文件里的规范执行；格式以技能内容为准，不要凭记忆自己编。执行期间只在真正阻塞时提问，已经回答过的参数不要重复确认。
+
+                动手前先盘点环境能力，再决定怎么测：代码看得到吗（仓库能否读，项目是 Web / 小程序 / App / 后端 / Flutter / RN）；能不能操控浏览器（打开页面、取 DOM、截图）；电脑有没有连手机（adb devices / iOS 设备列表）；能不能操作微信开发者工具（仓库里有 project.config.json 时找它的 CLI）；有没有桌面自动化；接口能不能直连、能不能看到响应或后端日志。按实际能用的手段选测试路径；工具不存在、端口没开、设备没连，一律记「不可用」，不要假设、不要伪造截图或响应。能力缺失不是停工理由，但最终回复要写清覆盖了哪些端与工具、哪些没覆盖、为什么。
+
+                每个问题都要给「初步定位」：判断该找前端还是后端。先看接口响应（字段、值、结构、状态码、排序、分页）是否与需求一致，接口没问题再看前端渲染与状态（模板、数据转换、格式化、条件渲染、事件、校验、路由）。能读到源码或接口响应时必须结合证据写结论：接口路径 + 关键字段值，或源码路径:行号，或控制台 / 日志原文；禁止只写「看起来像前端」这类没有依据的猜测。看不到源码又抓不到接口时写「待确认」，并写清缺什么证据、该找谁。结论只能是：前端 / 后端 / 前后端都有 / 需求或产品 / 待确认。
+
+                用户只丢来一个测试任务、没提这三项时也要先问；用户明确说「不用问、直接做」时，才按默认值直接开工（输出目录默认 test/首轮，无用例、无需求文档）。
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-bash
+            name: '@deepseek-ai/dsh-tool-bash'
+            disabled: !!js process.platform === 'win32'
+          - id: tool-pwsh
+            name: '@deepseek-ai/dsh-tool-pwsh'
+            disabled: !!js process.platform !== 'win32'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+            config:
+              applyPatch: false
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              sampleOverCapGlobResults: false
+          - id: tool-jobs
+            name: '@deepseek-ai/dsh-tool-jobs'
+          - id: tool-schedule
+            name: '@deepseek-ai/dsh-tool-schedule'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              # 第一项是 DSH 自带的 dsh-doc 技能；第二项是本包的 test-report 技能。
+              # 本包由 profile 安装（profile/node_modules 下的链接），不一定在 baseUrl 的
+              # 包解析范围内，所以先用 DSH_PROFILE_DIR 定位，再回退到 createRequire(baseUrl)，
+              # 最后只保留真实存在的目录，避免某个路径缺失就让整个预设激活失败。
+              customSkillDirs: !!js (() => { const p = process.getBuiltinModule('node:path'), f = process.getBuiltinModule('node:fs'), m = process.getBuiltinModule('node:module'), dirs = []; try { dirs.push(p.join(p.dirname(m.createRequire(baseUrl).resolve('@deepseek-ai/dsh-agent-preset/package.json')), 'skills')) } catch {} if (process.env.DSH_PROFILE_DIR) dirs.push(p.join(process.env.DSH_PROFILE_DIR, 'node_modules', 'dsh-test-acceptance-preset', 'skills')); try { dirs.push(p.join(p.dirname(m.createRequire(baseUrl).resolve('dsh-test-acceptance-preset/package.json')), 'skills')) } catch {} return dirs.filter((dir) => f.existsSync(dir)) })()
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: command-goal
+            name: '@deepseek-ai/dsh-command-goal'
+          - id: tool-goal
+            name: '@deepseek-ai/dsh-tool-goal'
+          - id: planning
+            name: cordis:group
+            group: true
+            isolate:
+              planMode: true
+            config:
+              - id: plan-mode
+                name: '@deepseek-ai/dsh-plan-mode'
+                config:
+                  section: |
+                    You are in plan mode. Stay in plan mode until the user approves your plan through exit_plan_mode or switches the session mode. Imperative language to implement changes means plan the implementation, not execute it. A user's conversational agreement — including an answer confirming something you asked — approves nothing and does not end plan mode; fold the confirmed decision into the plan and submit it through exit_plan_mode.
+
+                    Explore first. Use non-mutating reads, searches, static analysis, and checks to ground the plan in the actual repository. Do not edit or write files, change configuration, run formatters or code generation that rewrites tracked files, commit, or otherwise carry out the plan. Prefer existing functions and patterns over new machinery.
+
+                    The tool catalog stays the same across modes for request-cache stability. These plan-mode rules override any later tool description or guidance that suggests using mutation tools; those tools remain listed to keep the tool catalog unchanged. Do not use todo_write to track this planning phase: it tracks implementation after an approved plan, while the plan itself belongs in exit_plan_mode.
+
+                    Resolve discoverable facts by inspection. Use ask_user_question only for user-owned choices or material ambiguity that inspection cannot answer. Do not ask the user where code lives or how current behavior works when you can find out.
+
+                    Make the plan decision-complete: state the goal and success criteria; group implementation changes by subsystem; identify public API, schema, and data-flow changes; cover edge cases, failure modes, tests, acceptance criteria, and explicit assumptions. Keep it concise enough to review but detailed enough that another engineer can implement it without making design decisions.
+
+                    When ready, call exit_plan_mode with the complete plan markdown, starting with a # title. Make exit_plan_mode the only and final tool call in that assistant response: it presents the plan for approval, and implementation begins only in a later step after approval. Do not paste the final plan as a plain reply or ask "should I proceed?" through prose or ask_user_question. If review rejects it, incorporate the feedback and present again. If the review channel is unavailable or aborted, stay in plan mode and ask the user to switch modes manually; do not proceed with implementation.
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+          - id: delegation
+            name: cordis:group
+            group: true
+            isolate:
+              workflowEngine: true
+            config:
+              - id: tool-subagent-control
+                name: '@deepseek-ai/dsh-tool-subagent-control'
+                config:
+                  interrupt: false
+              - id: tool-subagent
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: spawn
+                  toolName: subagent
+                  modelSelection: true
+                  modelDiscovery: true
+              - id: tool-subagent-fork
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: fork
+                  toolName: subagent_fork
+              - id: workflow-ptc
+                name: '@deepseek-ai/dsh-workflow-ptc'
+                disabled: true
+                config:
+                  provider: spawn
+              - id: tool-workflow
+                name: '@deepseek-ai/dsh-tool-workflow'
+                disabled: true
+          - id: tool-ask-user
+            name: '@deepseek-ai/dsh-tool-ask-user'
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+            config:
+              allowParallelInProgress: true
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: tool-executor-ptc
+            name: '@deepseek-ai/dsh-tool-executor-ptc'
+          - id: present
+            name: '@deepseek-ai/dsh-tool-present'
+          - id: tool-office
+            name: '@deepseek-ai/dsh-tool-office'
+          - id: tool-plugin-manager
+            name: '@deepseek-ai/dsh-plugin-manager/tools'
+            disabled: !!js "!ctx.get('profileContext')"
+          - id: tool-plugin-market
+            name: '@deepseek-ai/dsh-plugin-market/tools'
+            disabled: true
+          - id: preset-sections
+            name: 'dsh-test-acceptance-preset/sections'
